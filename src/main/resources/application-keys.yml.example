@@ -1,0 +1,8 @@
+auth:
+  jwt:
+    secret:
+  oauth2:
+    kakao:
+      client-id:
+      client-uri: https://kauth.kakao.com/oauth/authorize?client_id=
+      redirect-uri: http://localhost:8080/api/members/oauth2/kakao/callback
