@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: spring-gift
+  datasource:
+    url: jdbc:h2:mem:test;MODE=MYSQL;DB_CLOSE_DELAY=-1
+  h2:
+    console:
+      enabled: true
+  sql:
+    init:
+      mode: always
+  jwt:
+    secret: 3d9ab7a026350b7acbf7d0d1c4dc70092ca2d179c6ef0cf2360bbe3141da210b
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: create
