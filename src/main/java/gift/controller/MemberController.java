@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import gift.dto.KakaoOauth2Response;
 import gift.dto.LoginRequest;
 import gift.dto.LoginResponse;
 import gift.dto.RegisterRequest;
 import gift.service.MemberService;
+import gift.service.Oauth2Service;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -25,9 +27,11 @@ import jakarta.validation.Valid;
 public class MemberController {
 
     private final MemberService memberService;
+    private final Oauth2Service oauth2Service;
 
-    public MemberController(MemberService memberService) {
+    public MemberController(MemberService memberService, Oauth2Service oauth2Service) {
         this.memberService = memberService;
+        this.oauth2Service = oauth2Service;
     }
 
     @PostMapping("/register")
@@ -59,7 +63,13 @@ public class MemberController {
     }
 
     @GetMapping("/oauth2/kakao/callback")
-    public ResponseEntity<String> kakaoLoginCallback(@RequestParam String code){
-        return ResponseEntity.status(HttpStatus.OK).body(code);
+    public ResponseEntity<KakaoOauth2Response> kakaoLoginCallback(
+        @Value("${auth.oauth2.kakao.client-id}") String clientId,
+        @Value("${auth.oauth2.kakao.token-uri}") String tokenUri,
+        @Value("${auth.oauth2.kakao.redirect-uri}") String redirectUri,
+        @RequestParam String code
+    ){
+        KakaoOauth2Response resp = oauth2Service.oauthLogin(clientId, tokenUri, redirectUri, code);
+        return ResponseEntity.status(HttpStatus.OK).body(resp);
     }
 }
