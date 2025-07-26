@@ -9,9 +9,11 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.RestClientException;
 
 import gift.exception.ApprovalRequiredException;
 import gift.exception.AuthorizationRequiredException;
+import gift.exception.KakaoApiException;
 import gift.exception.LoginException;
 import gift.exception.ProductCreateException;
 import gift.exception.ProductDeleteException;
@@ -106,6 +108,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(WishlistDeleteException.class)
     public ProblemDetail handleWishlistDeleteException(WishlistDeleteException e) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    }
+
+    @ExceptionHandler(KakaoApiException.class)
+    public ProblemDetail handleKakaoApiException(KakaoApiException e) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
+    @ExceptionHandler(RestClientException.class)
+    public ProblemDetail handleRestClientException(RestClientException e) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
 }
