@@ -1,0 +1,9 @@
+auth:
+  jwt:
+    secret: 3d9ab7a026350b7acbf7d0d1c4dc70092ca2d179c6ef0cf2360bbe3141da210b
+  oauth2:
+    kakao:
+      client-id: test-client-id
+      client-uri: test-client-uri?client_id=
+      redirect-uri: test-redirect-uri
+      token-uri: test-token-uri

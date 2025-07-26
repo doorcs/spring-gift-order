@@ -12,20 +12,24 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import gift.dto.KakaoOauth2Response;
 import gift.dto.LoginRequest;
 import gift.dto.LoginResponse;
 import gift.dto.RegisterRequest;
 import gift.interceptor.MemberAuthInterceptor;
 import gift.repository.MemberRepository;
 import gift.service.MemberService;
+import gift.service.Oauth2Service;
 import gift.util.TokenProvider;
 
 @WebMvcTest(MemberController.class)
+@TestPropertySource(properties = {"spring.config.location = classpath:test-keys.yml"})
 class MemberControllerTest {
 
     @Autowired
@@ -36,6 +40,9 @@ class MemberControllerTest {
 
     @MockitoBean
     private MemberService memberService;
+
+    @MockitoBean
+    private Oauth2Service oauth2Service;
 
     @MockitoBean
     private TokenProvider tokenProvider;
@@ -101,5 +108,62 @@ class MemberControllerTest {
         );
 
         assertThat(result.token()).isEqualTo(token);
+    }
+
+    @Test
+    void kakaoLoginTest() throws Exception {
+        // given
+        String clientId = "test-client-id";
+        String clientUri = "test-client-uri?client_id=";
+        String redirectUri = "test-redirect-uri";
+
+        // when
+        MockHttpServletResponse actual = mockMvc.perform(get("/api/members/oauth2/kakao"))
+            .andReturn().getResponse(); // @Value 어노테이션 설정값들은 test-keys.yml을 통해 매핑됨!
+
+        // then
+        assertThat(actual.getStatus()).isEqualTo(HttpStatus.FOUND.value());
+        assertThat(actual.getRedirectedUrl())
+            .isEqualTo(
+                clientUri + clientId + "&redirect_uri=" + redirectUri + "&response_type=code");
+    }
+
+    @Test
+    void kakaoLoginCallbackTest() throws Exception {
+        // given
+        String clientId = "test-client-id";
+        String redirectUri = "test-redirect-uri";
+        String tokenUri = "test-token-uri";
+        String code = "validCode";
+        String accessToken = "validToken";
+        String refreshToken = "validRefreshToken";
+        int expiresIn = 21599;
+        int refreshTokenExpiresIn = 5183999;
+
+        KakaoOauth2Response expected = new KakaoOauth2Response(
+            "bearer",
+            accessToken,
+            expiresIn,
+            refreshToken,
+            refreshTokenExpiresIn
+        );
+        given(oauth2Service.oauthLogin(eq(clientId), eq(tokenUri), eq(redirectUri), eq(code)))
+            .willReturn(expected);
+
+        // when
+        MockHttpServletResponse actual = mockMvc.perform(get("/api/members/oauth2/kakao/callback")
+            .param("code", code)
+        ).andReturn().getResponse();
+
+        // then
+        KakaoOauth2Response result = objectMapper.readValue(
+            actual.getContentAsString(),
+            KakaoOauth2Response.class
+        );
+
+        assertThat(result.accessToken()).isEqualTo(accessToken);
+        assertThat(result.expiresIn()).isEqualTo(expiresIn);
+        assertThat(result.refreshToken()).isEqualTo(refreshToken);
+        assertThat(result.refreshTokenExpiresIn()).isEqualTo(refreshTokenExpiresIn);
     }
 }
