@@ -16,7 +16,7 @@ public class JwtProvider implements TokenProvider {
 
     private final SecretKey secretKey;
 
-    public JwtProvider(@Value("${spring.jwt.secret}") String secret) {
+    public JwtProvider(@Value("${auth.jwt.secret}") String secret) {
         this.secretKey = new SecretKeySpec(
             secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm()
         );
