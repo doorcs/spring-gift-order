@@ -10,6 +10,10 @@ public record LoginRequest(
 
     @NotBlank(message = "이메일이 입력되지 않았습니다.")
     @Size(min = 5, message = "이메일 형식을 확인해주세요.") // a@a.a
+    @Pattern(
+        regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$",
+        message = "이메일 형식을 확인해주세요."
+    )
     String email,
 
     @NotBlank(message = "비밀번호가 입력되지 않았습니다.")
