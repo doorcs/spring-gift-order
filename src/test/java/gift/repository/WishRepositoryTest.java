@@ -1,6 +1,7 @@
 package gift.repository;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
@@ -51,11 +52,13 @@ class WishRepositoryTest {
 
         // then
         List<WishItem> wishItems = wishRepository.findAllProductByMemberId(1L, pageable);
-        assertThat(wishItems).hasSize(1);
-        assertThat(wishItems.get(0).productId()).isEqualTo(1L);
-        assertThat(wishItems.get(0).name()).isEqualTo("product1");
-        assertThat(wishItems.get(0).price()).isEqualTo(1000L);
-        assertThat(wishItems.get(0).imageUrl()).isEqualTo("image1");
+        assertAll(
+            () -> assertThat(wishItems).hasSize(1),
+            () -> assertThat(wishItems.get(0).productId()).isEqualTo(1L),
+            () -> assertThat(wishItems.get(0).name()).isEqualTo("product1"),
+            () -> assertThat(wishItems.get(0).price()).isEqualTo(1000L),
+            () -> assertThat(wishItems.get(0).imageUrl()).isEqualTo("image1")
+        );
     }
 
     @Test
@@ -72,14 +75,16 @@ class WishRepositoryTest {
         List<WishItem> wishItems = wishRepository.findAllProductByMemberId(1L, pageable);
 
         // then
-        assertThat(wishItems).hasSize(2);
-        assertThat(wishItems.get(0).productId()).isEqualTo(1L);
-        assertThat(wishItems.get(0).name()).isEqualTo("product1");
-        assertThat(wishItems.get(0).price()).isEqualTo(1000L);
-        assertThat(wishItems.get(0).imageUrl()).isEqualTo("image1");
-        assertThat(wishItems.get(1).productId()).isEqualTo(2L);
-        assertThat(wishItems.get(1).name()).isEqualTo("product2");
-        assertThat(wishItems.get(1).price()).isEqualTo(2000L);
-        assertThat(wishItems.get(1).imageUrl()).isEqualTo("image2");
+        assertAll(
+            () -> assertThat(wishItems).hasSize(2),
+            () -> assertThat(wishItems.get(0).productId()).isEqualTo(1L),
+            () -> assertThat(wishItems.get(0).name()).isEqualTo("product1"),
+            () -> assertThat(wishItems.get(0).price()).isEqualTo(1000L),
+            () -> assertThat(wishItems.get(0).imageUrl()).isEqualTo("image1"),
+            () -> assertThat(wishItems.get(1).productId()).isEqualTo(2L),
+            () -> assertThat(wishItems.get(1).name()).isEqualTo("product2"),
+            () -> assertThat(wishItems.get(1).price()).isEqualTo(2000L),
+            () -> assertThat(wishItems.get(1).imageUrl()).isEqualTo("image2")
+        );
     }
 }

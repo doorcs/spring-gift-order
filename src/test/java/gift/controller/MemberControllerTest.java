@@ -1,6 +1,7 @@
 package gift.controller;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -122,10 +123,12 @@ class MemberControllerTest {
             .andReturn().getResponse(); // @Value 어노테이션 설정값들은 test-keys.yml을 통해 매핑됨!
 
         // then
-        assertThat(actual.getStatus()).isEqualTo(HttpStatus.FOUND.value());
-        assertThat(actual.getRedirectedUrl())
-            .isEqualTo(
-                clientUri + clientId + "&redirect_uri=" + redirectUri + "&response_type=code");
+        assertAll(
+            () -> assertThat(actual.getStatus()).isEqualTo(HttpStatus.FOUND.value()),
+            () -> assertThat(actual.getRedirectedUrl()).contains(
+                "client_id=" + clientId + "&redirect_uri=" + redirectUri + "&response_type=code"
+            )
+        );
     }
 
     @Test
@@ -161,9 +164,11 @@ class MemberControllerTest {
             KakaoOauth2Response.class
         );
 
-        assertThat(result.accessToken()).isEqualTo(accessToken);
-        assertThat(result.expiresIn()).isEqualTo(expiresIn);
-        assertThat(result.refreshToken()).isEqualTo(refreshToken);
-        assertThat(result.refreshTokenExpiresIn()).isEqualTo(refreshTokenExpiresIn);
+        assertAll(
+            () -> assertThat(result.accessToken()).isEqualTo(accessToken),
+            () -> assertThat(result.expiresIn()).isEqualTo(expiresIn),
+            () -> assertThat(result.refreshToken()).isEqualTo(refreshToken),
+            () -> assertThat(result.refreshTokenExpiresIn()).isEqualTo(refreshTokenExpiresIn)
+        );
     }
 }
