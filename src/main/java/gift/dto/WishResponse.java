@@ -4,16 +4,14 @@ public record WishResponse(
     Long productId,
     Long price,
     String name,
-    String imageUrl,
-    Long quantity
+    String imageUrl
 ) {
     public static WishResponse from(WishItem item) {
         return new WishResponse(
             item.productId(),
             item.price(),
             item.name(),
-            item.imageUrl(),
-            item.quantity()
+            item.imageUrl()
         );
     }
 }

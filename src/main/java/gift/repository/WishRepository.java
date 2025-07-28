@@ -14,7 +14,7 @@ import gift.dto.WishItem;
 public interface WishRepository extends JpaRepository<Wish, Long> {
 
     @Query(value = """
-        SELECT new gift.dto.WishItem(w.id, p.id, p.price.price, p.productName.productName, p.imageUrl.imageUrl, w.quantity.quantity)
+        SELECT new gift.dto.WishItem(w.id, p.id, p.price.price, p.productName.productName, p.imageUrl.imageUrl)
         FROM Wish AS w
         JOIN w.product AS p
         WHERE w.member.id = :memberId
