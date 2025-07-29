@@ -8,3 +8,7 @@ auth:
       redirect-uri: http://localhost:8080/api/members/oauth2/kakao/callback
       token-uri: https://kauth.kakao.com/oauth/token
       info-uri: https://kapi.kakao.com/v2/user/me
+
+kakaotalk:
+  api:
+    me: https://kapi.kakao.com/v2/api/talk/memo/default/send

@@ -6,8 +6,8 @@ import jakarta.validation.constraints.NotNull;
 
 public record OrderRequest(
 
-    @NotNull(message = "상품 ID가 입력되지 않았습니다.")
-    @Min(value = 1, message = "상품 ID가 올바르지 않습니다.")
+    @NotNull(message = "옵션 ID가 입력되지 않았습니다.")
+    @Min(value = 1, message = "옵션 ID가 올바르지 않습니다.")
     Long optionId,
 
     @NotNull(message = "수량이 입력되지 않았습니다.")

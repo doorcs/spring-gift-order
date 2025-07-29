@@ -60,6 +60,10 @@ public class Option {
         return id;
     }
 
+    public Product getProduct() {
+        return product;
+    }
+
     public OptionName getOptionName() {
         return optionName;
     }

@@ -20,6 +20,7 @@ import gift.exception.ProductDeleteException;
 import gift.exception.ProductNotFoundException;
 import gift.exception.ProductUpdateException;
 import gift.exception.RegisterException;
+import gift.exception.WishNotFoundException;
 import gift.exception.WishlistAddException;
 import gift.exception.WishlistDeleteException;
 import io.jsonwebtoken.JwtException;
@@ -119,5 +120,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RestClientException.class)
     public ProblemDetail handleRestClientException(RestClientException e) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    }
+
+    @ExceptionHandler(WishNotFoundException.class)
+    public  ProblemDetail handleWishNotFoundException(WishNotFoundException e) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 }
