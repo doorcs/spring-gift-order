@@ -2,7 +2,6 @@ package gift.controller;
 
 import jakarta.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,11 +28,10 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(
-        @Value("${kakaotalk.api.me}") String messageUri,
         @LoginMemberId Long memberId,
         @Valid @RequestBody OrderRequest orderRequest
     ) throws JsonProcessingException {
-        OrderResponse orderResponse = orderService.order(messageUri, memberId, orderRequest);
+        OrderResponse orderResponse = orderService.order(memberId, orderRequest);
         return ResponseEntity.status(HttpStatus.OK).body(orderResponse);
     }
 }

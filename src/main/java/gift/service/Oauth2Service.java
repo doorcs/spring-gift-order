@@ -9,6 +9,7 @@ import org.springframework.web.client.RestClient;
 import gift.domain.KakaoAuth;
 import gift.domain.Member;
 import gift.domain.embed.Email;
+import gift.domain.properties.KakaoOauthProperties;
 import gift.dto.KakaoOauthResponse;
 import gift.dto.KakaoTokenResponse;
 import gift.dto.LoginResponse;
@@ -24,41 +25,38 @@ public class Oauth2Service {
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
     private final RestClient restClient;
+    private final KakaoOauthProperties kakaoOauthProperties;
 
     public Oauth2Service(
         KakaoAuthRepository kakaoAuthRepository,
         MemberRepository memberRepository,
         TokenProvider tokenProvider,
-        RestClient restClient
+        RestClient restClient,
+        KakaoOauthProperties kakaoOauthProperties
     ) {
         this.kakaoAuthRepository = kakaoAuthRepository;
         this.memberRepository = memberRepository;
         this.tokenProvider = tokenProvider;
         this.restClient = restClient;
+        this.kakaoOauthProperties = kakaoOauthProperties;
     }
 
-    public LoginResponse oauthLogin(
-        String clientId,
-        String tokenUri,
-        String redirectUri,
-        String infoUri,
-        String code
-    ) {
+    public LoginResponse oauthLogin(String code) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
-        params.add("client_id", clientId);
-        params.add("redirect_uri", redirectUri);
+        params.add("client_id", kakaoOauthProperties.clientId());
+        params.add("redirect_uri", kakaoOauthProperties.redirectUri());
         params.add("code", code);
 
         KakaoTokenResponse token = restClient.post()
-            .uri(tokenUri)
+            .uri(kakaoOauthProperties.tokenUri())
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .body(params)
             .retrieve()
             .body(KakaoTokenResponse.class);
 
         KakaoOauthResponse response = restClient.post()
-            .uri(infoUri)
+            .uri(kakaoOauthProperties.infoUri())
             .header("Authorization", "Bearer " + token.accessToken())
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .retrieve()

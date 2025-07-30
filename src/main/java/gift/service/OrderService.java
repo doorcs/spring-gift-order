@@ -3,6 +3,7 @@ package gift.service;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,9 @@ import gift.repository.OrderRepository;
 @Service
 public class OrderService {
 
+    @Value("${kakaotalk.api.me}")
+    private String messageUri;
+
     private final MemberRepository memberRepository;
     private final OptionRepository optionRepository;
     private final KakaoAuthRepository kakaoAuthRepository;
@@ -55,7 +59,6 @@ public class OrderService {
 
     @Transactional
     public OrderResponse order(
-        String messageUri,
         Long memberId,
         OrderRequest request
     ) throws JsonProcessingException {
