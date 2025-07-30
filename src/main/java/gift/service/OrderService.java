@@ -34,7 +34,6 @@ public class OrderService {
     private final OptionRepository optionRepository;
     private final KakaoAuthRepository kakaoAuthRepository;
     private final OrderRepository orderRepository;
-    private final ProductService productService;
     private final ObjectMapper objectMapper;
     private final RestClient restClient;
 
@@ -43,7 +42,6 @@ public class OrderService {
         OptionRepository optionRepository,
         KakaoAuthRepository kakaoAuthRepository,
         OrderRepository orderRepository,
-        ProductService productService,
         ObjectMapper objectMapper,
         RestClient restClient
     ) {
@@ -51,7 +49,6 @@ public class OrderService {
         this.optionRepository = optionRepository;
         this.kakaoAuthRepository = kakaoAuthRepository;
         this.orderRepository = orderRepository;
-        this.productService = productService;
         this.objectMapper = objectMapper;
         this.restClient = restClient;
     }
@@ -78,7 +75,7 @@ public class OrderService {
             member.removeFromWishlist(product);
         }
 
-        productService.subOptionCount(option.getId(), request.quantity()); // 수량 유효성 검증 및 예외처리
+        option.subQuantity(request.quantity()); // 수량 유효성 검증 및 예외처리
 
         Order order = orderRepository.save(new Order(option, member));
 
