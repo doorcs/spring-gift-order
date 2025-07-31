@@ -33,11 +33,11 @@ public class KakaoMessageService {
     public KakaoMessageService(
         KakaoAuthRepository kakaoAuthRepository,
         ObjectMapper objectMapper,
-        RestClient restClient
+        RestClient kakaoApiRestClient
     ) {
         this.kakaoAuthRepository = kakaoAuthRepository;
         this.objectMapper = objectMapper;
-        this.restClient = restClient;
+        this.restClient = kakaoApiRestClient;
     }
 
     @Async

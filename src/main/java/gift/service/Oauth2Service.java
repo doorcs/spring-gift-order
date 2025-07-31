@@ -31,13 +31,13 @@ public class Oauth2Service {
         KakaoAuthRepository kakaoAuthRepository,
         MemberRepository memberRepository,
         TokenProvider tokenProvider,
-        RestClient restClient,
+        RestClient kakaoAuthRestClient,
         KakaoOauthProperties kakaoOauthProperties
     ) {
         this.kakaoAuthRepository = kakaoAuthRepository;
         this.memberRepository = memberRepository;
         this.tokenProvider = tokenProvider;
-        this.restClient = restClient;
+        this.restClient = kakaoAuthRestClient;
         this.kakaoOauthProperties = kakaoOauthProperties;
     }
 
