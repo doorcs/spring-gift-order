@@ -32,12 +32,7 @@ public class RestClientConfig {
                         KakaoApiErrorResponse msg = objectMapper.readValue(
                             response.getBody(), KakaoApiErrorResponse.class
                         );
-                        throw new KakaoApiException(
-                            "요청 데이터에 오류가 있습니다. 코드: "
-                                + msg.code()
-                                + ", 메시지: "
-                                + msg.message()
-                        );
+                        throw new KakaoApiException(msg.code(), msg.message());
                     } else { // 5xx 에러 핸들링
                         throw new RestClientException("카카오 API 서버 오류가 발생했습니다.");
                     }
@@ -61,12 +56,7 @@ public class RestClientConfig {
                         KakaoAuthErrorResponse msg = objectMapper.readValue(
                             response.getBody(), KakaoAuthErrorResponse.class
                         );
-                        throw new KakaoApiException(
-                            "요청 데이터에 오류가 있습니다. 코드: "
-                                + msg.error()
-                                + ", 메시지: "
-                                + msg.errorDescription()
-                        );
+                        throw new KakaoApiException(msg.error(), msg.errorDescription());
                     } else { // 5xx 에러 핸들링
                         throw new RestClientException("카카오 API 서버 오류가 발생했습니다.");
                     }

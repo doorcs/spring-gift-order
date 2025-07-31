@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record KakaoApiErrorResponse(
 
     @JsonProperty("code")
-    Integer code,
+    String code,
 
     @JsonProperty("msg")
     String message
