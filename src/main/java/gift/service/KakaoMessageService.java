@@ -55,7 +55,7 @@ public class KakaoMessageService {
 
         restClient.post()
             .uri(messageUri)
-            .header("Authorization", "Bearer " + kakaoAuth.getAccessToken())
+            .header("Authorization", "Bearer %s".formatted(kakaoAuth.getAccessToken()))
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .body(body)
             .retrieve()

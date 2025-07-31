@@ -62,7 +62,7 @@ public class OrderService {
 
         Order order = orderRepository.save(new Order(option, member));
 
-        if (member.getPassword().equals("oauth-kakao")) {
+        if ("oauth-kakao".equals(member.getPassword())) {
             // 카카오 로그인을 통해 가입한 회원일 경우 메시지 발송 API 호출
             kakaoMessageService.sendMessage(member, request);
         }

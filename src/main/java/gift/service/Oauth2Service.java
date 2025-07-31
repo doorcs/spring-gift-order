@@ -57,7 +57,7 @@ public class Oauth2Service {
 
         KakaoOauthResponse response = restClient.post()
             .uri(kakaoOauthProperties.infoUri())
-            .header("Authorization", "Bearer " + token.accessToken())
+            .header("Authorization", "Bearer %s".formatted(token.accessToken()))
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .retrieve()
             .body(KakaoOauthResponse.class);
