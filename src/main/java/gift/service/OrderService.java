@@ -1,20 +1,10 @@
 package gift.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestClient;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import gift.domain.KakaoAuth;
 import gift.domain.Member;
 import gift.domain.Option;
 import gift.domain.Order;
@@ -23,7 +13,6 @@ import gift.dto.OrderRequest;
 import gift.dto.OrderResponse;
 import gift.exception.LoginException;
 import gift.exception.WishNotFoundException;
-import gift.repository.KakaoAuthRepository;
 import gift.repository.MemberRepository;
 import gift.repository.OptionRepository;
 import gift.repository.OrderRepository;
@@ -31,30 +20,21 @@ import gift.repository.OrderRepository;
 @Service
 public class OrderService {
 
-    @Value("${kakaotalk.api.me}")
-    private String messageUri;
-
     private final MemberRepository memberRepository;
     private final OptionRepository optionRepository;
-    private final KakaoAuthRepository kakaoAuthRepository;
     private final OrderRepository orderRepository;
-    private final ObjectMapper objectMapper;
-    private final RestClient restClient;
+    private final KakaoMessageService kakaoMessageService;
 
     public OrderService(
         MemberRepository memberRepository,
         OptionRepository optionRepository,
-        KakaoAuthRepository kakaoAuthRepository,
         OrderRepository orderRepository,
-        ObjectMapper objectMapper,
-        RestClient restClient
+        KakaoMessageService kakaoMessageService
     ) {
         this.memberRepository = memberRepository;
         this.optionRepository = optionRepository;
-        this.kakaoAuthRepository = kakaoAuthRepository;
         this.orderRepository = orderRepository;
-        this.objectMapper = objectMapper;
-        this.restClient = restClient;
+        this.kakaoMessageService = kakaoMessageService;
     }
 
     @Transactional
@@ -84,26 +64,7 @@ public class OrderService {
 
         if (member.getPassword().equals("oauth-kakao")) {
             // 카카오 로그인을 통해 가입한 회원일 경우 메시지 발송 API 호출
-            KakaoAuth kakaoAuth = kakaoAuthRepository.findById(member.getId())
-                .orElseThrow(() -> new LoginException("d"));
-
-            Map<String, Object> templateObject = new HashMap<>();
-            templateObject.put("object_type", "text");
-            templateObject.put("text", "주문이 완료되었습니다.\n" + "메시지: " + request.message());
-            templateObject.put("link", new HashMap<>());
-
-            String templateObjectJson = objectMapper.writeValueAsString(templateObject);
-
-            MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-            body.add("template_object", templateObjectJson);
-
-            restClient.post()
-                .uri(messageUri)
-                .header("Authorization", "Bearer " + kakaoAuth.getAccessToken())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(body)
-                .retrieve()
-                .toBodilessEntity();
+            kakaoMessageService.sendMessage(member, request);
         }
 
         return new OrderResponse(
