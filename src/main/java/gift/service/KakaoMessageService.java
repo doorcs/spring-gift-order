@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -39,9 +40,12 @@ public class KakaoMessageService {
         this.restClient = restClient;
     }
 
+    @Async
     public void sendMessage(Member member, OrderRequest request) throws JsonProcessingException {
         KakaoAuth kakaoAuth = kakaoAuthRepository.findById(member.getId())
-            .orElseThrow(() -> new LoginException("d"));
+            .orElseThrow(() -> new LoginException(
+                "현재 카카오톡 메시지 전송 기능은 카카오 로그인을 통해 가입한 사용자만 지원하고 있습니다."
+            ));
 
         Map<String, Object> templateObject = new HashMap<>();
         templateObject.put("object_type", "text");
