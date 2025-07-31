@@ -47,15 +47,10 @@ public class KakaoMessageService {
                 "현재 카카오톡 메시지 전송 기능은 카카오 로그인을 통해 가입한 사용자만 지원하고 있습니다."
             ));
 
-        Map<String, Object> templateObject = new HashMap<>();
-        templateObject.put("object_type", "text");
-        templateObject.put("text", "주문이 완료되었습니다.\n" + "메시지: " + request.message());
-        templateObject.put("link", new HashMap<>());
-
-        String templateObjectJson = objectMapper.writeValueAsString(templateObject);
+        String orderMessage = createOrderMessage(request);
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("template_object", templateObjectJson);
+        body.add("template_object", orderMessage);
 
         restClient.post()
             .uri(messageUri)
@@ -64,5 +59,14 @@ public class KakaoMessageService {
             .body(body)
             .retrieve()
             .toBodilessEntity();
+    }
+
+    private String createOrderMessage(OrderRequest request) throws JsonProcessingException {
+        Map<String, Object> templateObject = new HashMap<>();
+        templateObject.put("object_type", "text");
+        templateObject.put("text", "주문이 완료되었습니다.\n메시지: %s".formatted(request.message()));
+        templateObject.put("link", new HashMap<>());
+
+        return objectMapper.writeValueAsString(templateObject);
     }
 }
