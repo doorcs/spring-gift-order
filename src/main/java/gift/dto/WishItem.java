@@ -5,7 +5,6 @@ public record WishItem(
     Long productId,
     Long price,
     String name,
-    String imageUrl,
-    Long quantity
+    String imageUrl
 ) {
 }

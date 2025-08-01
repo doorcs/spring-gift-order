@@ -1,6 +1,7 @@
 package gift.controller;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -22,8 +23,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import gift.domain.Option;
-import gift.domain.Product;
 import gift.dto.CreateProductRequest;
 import gift.dto.CreateProductResponse;
 import gift.dto.OptionRequest;
@@ -84,15 +83,18 @@ class ProductControllerTest {
             ProductResponse[].class
         ));
 
-        assertThat(result).hasSize(2);
-        assertThat(result.get(0).id()).isEqualTo(1L);
-        assertThat(result.get(0).name()).isEqualTo("상품1");
-        assertThat(result.get(0).price()).isEqualTo(1000L);
-        assertThat(result.get(0).imageUrl()).isEqualTo("image1");
-        assertThat(result.get(1).id()).isEqualTo(2L);
-        assertThat(result.get(1).name()).isEqualTo("상품2");
-        assertThat(result.get(1).price()).isEqualTo(2000L);
-        assertThat(result.get(1).imageUrl()).isEqualTo("image2");
+        assertAll(
+            () -> assertThat(result).isNotNull(),
+            () -> assertThat(result).hasSize(2),
+            () -> assertThat(result.get(0).id()).isEqualTo(1L),
+            () -> assertThat(result.get(0).name()).isEqualTo("상품1"),
+            () -> assertThat(result.get(0).price()).isEqualTo(1000L),
+            () -> assertThat(result.get(0).imageUrl()).isEqualTo("image1"),
+            () -> assertThat(result.get(1).id()).isEqualTo(2L),
+            () -> assertThat(result.get(1).name()).isEqualTo("상품2"),
+            () -> assertThat(result.get(1).price()).isEqualTo(2000L),
+            () -> assertThat(result.get(1).imageUrl()).isEqualTo("image2")
+        );
     }
 
     @Test
@@ -113,10 +115,12 @@ class ProductControllerTest {
             actual.getContentAsString(),
             ProductResponse.class
         );
-        assertThat(result.id()).isEqualTo(1L);
-        assertThat(result.name()).isEqualTo("상품1");
-        assertThat(result.price()).isEqualTo(1000L);
-        assertThat(result.imageUrl()).isEqualTo("image1");
+        assertAll(
+            () -> assertThat(result.id()).isEqualTo(productId),
+            () -> assertThat(result.name()).isEqualTo("상품1"),
+            () -> assertThat(result.price()).isEqualTo(1000L),
+            () -> assertThat(result.imageUrl()).isEqualTo("image1")
+        );
     }
 
     @Test
@@ -141,10 +145,13 @@ class ProductControllerTest {
             actual.getContentAsString(),
             CreateProductResponse.class
         );
-        assertThat(result.id()).isEqualTo(1L);
-        assertThat(result.name()).isEqualTo("상품1");
-        assertThat(result.price()).isEqualTo(1000L);
-        assertThat(result.imageUrl()).isEqualTo("image1");
+        assertAll(
+            () -> assertThat(result).isNotNull(),
+            () -> assertThat(result.id()).isEqualTo(1L),
+            () -> assertThat(result.name()).isEqualTo("상품1"),
+            () -> assertThat(result.price()).isEqualTo(1000L),
+            () -> assertThat(result.imageUrl()).isEqualTo("image1")
+        );
     }
 
     @Test
@@ -173,10 +180,12 @@ class ProductControllerTest {
             actual.getContentAsString(),
             UpdateProductResponse.class
         );
-        assertThat(result.id()).isEqualTo(productId);
-        assertThat(result.name()).isEqualTo("상품1");
-        assertThat(result.price()).isEqualTo(1500L);
-        assertThat(result.imageUrl()).isEqualTo("newimage");
+        assertAll(
+            () -> assertThat(result.id()).isEqualTo(productId),
+            () -> assertThat(result.name()).isEqualTo("상품1"),
+            () -> assertThat(result.price()).isEqualTo(1500L),
+            () -> assertThat(result.imageUrl()).isEqualTo("newimage")
+        );
     }
 
     @Test

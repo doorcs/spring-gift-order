@@ -1,6 +1,7 @@
 package gift.repository;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,10 +37,12 @@ public class ProductRepositoryTest {
         Product savedProduct = productRepository.save(product);
 
         // then
-        assertThat(savedProduct.getId()).isEqualTo(1L);
-        assertThat(savedProduct.getProductName()).isEqualTo("상품1");
-        assertThat(savedProduct.getPrice()).isEqualTo(1000L);
-        assertThat(savedProduct.getImageUrl()).isEqualTo("image1");
+        assertAll(
+            () -> assertThat(savedProduct.getId()).isEqualTo(1L),
+            () -> assertThat(savedProduct.getProductName()).isEqualTo("상품1"),
+            () -> assertThat(savedProduct.getPrice()).isEqualTo(1000L),
+            () -> assertThat(savedProduct.getImageUrl()).isEqualTo("image1")
+        );
     }
 
     @Test
@@ -53,14 +56,16 @@ public class ProductRepositoryTest {
         Optional<Product> product2 = productRepository.findById(2L);
 
         // then
-        assertThat(product1).isPresent();
-        assertThat(product1.get().getProductName()).isEqualTo("상품1");
-        assertThat(product1.get().getPrice()).isEqualTo(1000L);
-        assertThat(product1.get().getImageUrl()).isEqualTo("image1");
-        assertThat(product2).isPresent();
-        assertThat(product2.get().getProductName()).isEqualTo("상품2");
-        assertThat(product2.get().getPrice()).isEqualTo(2000L);
-        assertThat(product2.get().getImageUrl()).isEqualTo("image2");
+        assertAll(
+            () -> assertThat(product1).isPresent(),
+            () -> assertThat(product1.get().getProductName()).isEqualTo("상품1"),
+            () -> assertThat(product1.get().getPrice()).isEqualTo(1000L),
+            () -> assertThat(product1.get().getImageUrl()).isEqualTo("image1"),
+            () -> assertThat(product2).isPresent(),
+            () -> assertThat(product2.get().getProductName()).isEqualTo("상품2"),
+            () -> assertThat(product2.get().getPrice()).isEqualTo(2000L),
+            () -> assertThat(product2.get().getImageUrl()).isEqualTo("image2")
+        );
     }
 
     @Test

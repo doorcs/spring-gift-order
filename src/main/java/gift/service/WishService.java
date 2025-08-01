@@ -56,8 +56,7 @@ public class WishService {
             product.getId(),
             product.getPrice(),
             product.getProductName(),
-            product.getImageUrl(),
-            1L
+            product.getImageUrl()
         );
     }
 

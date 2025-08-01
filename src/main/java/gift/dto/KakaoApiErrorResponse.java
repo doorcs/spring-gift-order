@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record KakaoApiErrorResponse(
 
-    @JsonProperty("error")
-    String error,
+    @JsonProperty("code")
+    String code,
 
-    @JsonProperty("error_description")
-    String errorDescription
+    @JsonProperty("msg")
+    String message
 ) {
 }

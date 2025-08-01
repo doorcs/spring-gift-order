@@ -1,6 +1,7 @@
 package gift.repository;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Optional;
 
@@ -36,9 +37,11 @@ public class MemberRepositoryTest {
         Member savedMember = memberRepository.save(member);
 
         // then
-        assertThat(savedMember.getId()).isEqualTo(1L);
-        assertThat(savedMember.getEmail()).isEqualTo("test@test.com");
-        assertThat(savedMember.getPassword()).isEqualTo("dbPassword");
+        assertAll(
+            () -> assertThat(savedMember.getId()).isEqualTo(1L),
+            () -> assertThat(savedMember.getEmail()).isEqualTo("test@test.com"),
+            () -> assertThat(savedMember.getPassword()).isEqualTo("dbPassword")
+        );
     }
 
     @Test
@@ -50,9 +53,11 @@ public class MemberRepositoryTest {
         Optional<Member> member = memberRepository.findByEmail(new Email("test@test.com"));
 
         // then
-        assertThat(member.get().getId()).isEqualTo(1L);
-        assertThat(member.get().getEmail()).isEqualTo("test@test.com");
-        assertThat(member.get().getPassword()).isEqualTo("dbPassword");
+        assertAll(
+            () -> assertThat(member.get().getId()).isEqualTo(1L),
+            () -> assertThat(member.get().getEmail()).isEqualTo("test@test.com"),
+            () -> assertThat(member.get().getPassword()).isEqualTo("dbPassword")
+        );
     }
 
     @Test

@@ -2,7 +2,7 @@ package gift.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record KakaoOauth2Response(
+public record KakaoTokenResponse(
 
     @JsonProperty("token_type")
     String tokenType,
