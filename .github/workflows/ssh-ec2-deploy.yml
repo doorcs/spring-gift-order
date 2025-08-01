@@ -33,5 +33,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           user: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
-          pre_upload: rm -f /home/ec2-user/application/*.jar
+          pre_upload: |-
+            mkdir -p /home/ec2-user/application/libs
+            rm -f /home/ec2-user/application/libs/*.jar
           post_upload: /home/ec2-user/application/deploy.sh
