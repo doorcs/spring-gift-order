@@ -61,9 +61,11 @@ public class Member {
     }
 
     public void removeFromWishlist(Product product) {
-        this.wishlist.remove(
-            new Wish(this, product)
-        );
+        if (isProductInWishlist(product)) {
+            this.wishlist.remove(
+                new Wish(this, product)
+            );
+        }
     }
 
     public Long getId() {
@@ -80,5 +82,11 @@ public class Member {
 
     public String getRole() {
         return this.role.getRole();
+    }
+
+    private boolean isProductInWishlist(Product product) {
+        return this.getWishlist()
+            .stream()
+            .anyMatch(elem -> elem.getProduct().equals(product));
     }
 }

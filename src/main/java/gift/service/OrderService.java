@@ -50,16 +50,8 @@ public class OrderService {
 
         Product product = option.getProduct();
 
-        boolean isProductInWishlist = member.getWishlist()
-            .stream()
-            .anyMatch(elem -> elem.getProduct().equals(product));
-
-        if (isProductInWishlist) {
-            member.removeFromWishlist(product);
-        }
-
+        member.removeFromWishlist(product);
         option.subQuantity(request.quantity()); // 수량 유효성 검증 및 예외처리
-
         Order order = orderRepository.save(new Order(option, member));
 
         if ("oauth-kakao".equals(member.getPassword())) {
