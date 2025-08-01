@@ -69,7 +69,7 @@ class ProductControllerTest {
             new ProductResponse(1L, "상품1", 1000L, "image1"),
             new ProductResponse(2L, "상품2", 2000L, "image2")
         );
-        Pageable pageable = PageRequest.of(0, 2);
+        Pageable pageable = PageRequest.of(0, 15);
         given(productService.getAllProducts(pageable)).willReturn(products);
 
         // when
