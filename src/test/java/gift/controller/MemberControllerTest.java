@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import gift.dto.KakaoOauth2Response;
+import gift.domain.properties.KakaoOauthProperties;
 import gift.dto.LoginRequest;
 import gift.dto.LoginResponse;
 import gift.dto.RegisterRequest;
@@ -54,9 +54,15 @@ class MemberControllerTest {
     @MockitoBean
     private MemberAuthInterceptor memberAuthInterceptor;
 
+    @MockitoBean
+    private KakaoOauthProperties kakaoOauthProperties;
+
     @BeforeEach
     void setUp() throws Exception {
         given(memberAuthInterceptor.preHandle(any(), any(), any())).willReturn(true);
+        given(kakaoOauthProperties.clientId()).willReturn("test-client-id");
+        given(kakaoOauthProperties.clientUri()).willReturn("test-client-uri?client_id=");
+        given(kakaoOauthProperties.redirectUri()).willReturn("test-redirect-uri");
     }
 
     @Test
@@ -115,7 +121,6 @@ class MemberControllerTest {
     void kakaoLoginTest() throws Exception {
         // given
         String clientId = "test-client-id";
-        String clientUri = "test-client-uri?client_id=";
         String redirectUri = "test-redirect-uri";
 
         // when
@@ -134,23 +139,13 @@ class MemberControllerTest {
     @Test
     void kakaoLoginCallbackTest() throws Exception {
         // given
-        String clientId = "test-client-id";
-        String redirectUri = "test-redirect-uri";
-        String tokenUri = "test-token-uri";
         String code = "validCode";
         String accessToken = "validToken";
-        String refreshToken = "validRefreshToken";
-        int expiresIn = 21599;
-        int refreshTokenExpiresIn = 5183999;
 
-        KakaoOauth2Response expected = new KakaoOauth2Response(
-            "bearer",
-            accessToken,
-            expiresIn,
-            refreshToken,
-            refreshTokenExpiresIn
+        LoginResponse expected = new LoginResponse(
+            accessToken
         );
-        given(oauth2Service.oauthLogin(eq(clientId), eq(tokenUri), eq(redirectUri), eq(code)))
+        given(oauth2Service.oauthLogin(eq(code)))
             .willReturn(expected);
 
         // when
@@ -159,16 +154,11 @@ class MemberControllerTest {
         ).andReturn().getResponse();
 
         // then
-        KakaoOauth2Response result = objectMapper.readValue(
+        LoginResponse result = objectMapper.readValue(
             actual.getContentAsString(),
-            KakaoOauth2Response.class
+            LoginResponse.class
         );
 
-        assertAll(
-            () -> assertThat(result.accessToken()).isEqualTo(accessToken),
-            () -> assertThat(result.expiresIn()).isEqualTo(expiresIn),
-            () -> assertThat(result.refreshToken()).isEqualTo(refreshToken),
-            () -> assertThat(result.refreshTokenExpiresIn()).isEqualTo(refreshTokenExpiresIn)
-        );
+       assertThat(result.token()).isEqualTo(accessToken);
     }
 }
