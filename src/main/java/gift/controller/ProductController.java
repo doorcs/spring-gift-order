@@ -37,7 +37,7 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts(
-        @PageableDefault(size = 2) Pageable pageable
+        @PageableDefault(size = 15) Pageable pageable
     ) {
         List<ProductResponse> products = productService.getAllProducts(pageable);
         return ResponseEntity.status(HttpStatus.OK).body(products);

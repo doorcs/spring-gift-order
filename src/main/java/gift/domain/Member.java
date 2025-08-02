@@ -14,6 +14,7 @@ import gift.domain.embed.Email;
 import gift.domain.embed.Password;
 import gift.domain.embed.Role;
 import gift.domain.embed.Wishlist;
+import gift.exception.ProductNotFoundException;
 
 @Entity
 @Table(name = "member")
@@ -65,6 +66,8 @@ public class Member {
             this.wishlist.remove(
                 new Wish(this, product)
             );
+        } else {
+            throw new ProductNotFoundException("위시리스트에 해당 상품이 존재하지 않습니다.");
         }
     }
 

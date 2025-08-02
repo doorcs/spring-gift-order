@@ -23,18 +23,18 @@ import gift.repository.KakaoAuthRepository;
 @Service
 public class KakaoMessageService {
 
-    @Value("${kakaotalk.api.me}")
-    private String messageUri;
-
+    private final String messageUri;
     private final KakaoAuthRepository kakaoAuthRepository;
     private final ObjectMapper objectMapper;
     private final RestClient restClient;
 
     public KakaoMessageService(
+        @Value("${kakaotalk.api.me}") String messageUri,
         KakaoAuthRepository kakaoAuthRepository,
         ObjectMapper objectMapper,
         RestClient kakaoApiRestClient
     ) {
+        this.messageUri = messageUri;
         this.kakaoAuthRepository = kakaoAuthRepository;
         this.objectMapper = objectMapper;
         this.restClient = kakaoApiRestClient;
